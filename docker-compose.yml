@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  nestjs-app:
+    build:
+      context: ./custom-gpt-nestjs
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    depends_on:
+      - redis
+    env_file:
+      - ./custom-gpt-nestjs/.env
+
+  python-app:
+    build:
+      context: ./custom-gpt-python
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+    env_file:
+      - ./custom-gpt-python/.env
+
+  frontend-app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    env_file:
+      - ./frontend/.env
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
